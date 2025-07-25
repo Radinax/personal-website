@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+@layer base {
+  * {
+    @apply font-['Inter'];
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-slate-900 antialiased;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
