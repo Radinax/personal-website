@@ -1,3 +1,6 @@
+import XformerlyTwitter from "@/components/x";
+import Linkedin from "@/components/linkedin";
+import Github from "@/components/github";
 import { ChevronDown, ArrowRight } from "lucide-react";
 import ProfileImage from "public/profile-image.jpg";
 
@@ -58,7 +61,7 @@ const Hero = () => {
           {/* Profile Picture Section */}
           <div className="flex justify-center order-1">
             <div className="relative">
-              <div className="w-80 h-80 md:w-80 md:h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-white">
+              <div className="w-56 h-56 md:w-80 md:h-80 rounded-full overflow-hidden shadow-2xl ring-4 ring-white">
                 <img
                   src={ProfileImage}
                   alt="Adrian Beria - Senior Frontend Lead Developer"
@@ -66,10 +69,47 @@ const Hero = () => {
                 />
               </div>
               {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-600 rounded-full opacity-20 animate-pulse"></div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-emerald-500 rounded-full opacity-10 animate-pulse delay-1000"></div>
+              <div className="absolute -top-4 -right-4 size-16 md:size-24 bg-blue-600 rounded-full opacity-20 animate-pulse"></div>
+              <div className="absolute -bottom-6 -left-6 size-24 md:size-32 bg-emerald-500 rounded-full opacity-10 animate-pulse delay-1000"></div>
             </div>
           </div>
+        </div>
+
+        {/* Social */}
+        <div className="flex justify-center items-center mt-12 space-x-4">
+          <a
+            href="https://x.com/Adrberia"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-transparent shadow-sm hover:shadow-md text-black-600 hover:text-white hover:bg-black transition-all duration-300 transform hover:scale-105"
+          >
+            <XformerlyTwitter
+              style={{ fill: "currentColor" }}
+              className="size-8 group-hover:text-white transition-colors duration-300 mx-auto"
+            />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/adrianberia2013/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-transparent shadow-sm hover:shadow-md text-blue-600 hover:text-white hover:bg-blue-600 transition-all duration-300 transform hover:scale-105"
+          >
+            <Linkedin
+              style={{ fill: "currentColor" }}
+              className="w-6 h-6 group-hover:text-white transition-colors duration-300"
+            />
+          </a>
+          <a
+            href="https://github.com/Radinax"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-transparent shadow-sm hover:shadow-md text-black-600 hover:text-white hover:bg-black transition-all duration-300 transform hover:scale-105"
+          >
+            <Github
+              style={{ fill: "currentColor" }}
+              className="size-8 group-hover:text-white transition-colors duration-300 mx-auto"
+            />
+          </a>
         </div>
 
         {/* Scroll indicator */}

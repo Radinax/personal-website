@@ -1,11 +1,6 @@
 import { useState } from "react";
-import {
-  Quote,
-  Linkedin,
-  ChevronLeft,
-  ChevronRight,
-  ArrowRight,
-} from "lucide-react";
+import { Quote, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import Linkedin from "@/components/linkedin";
 
 const testimonials = [
   {
@@ -213,7 +208,6 @@ const Testimonials = () => {
     goToSlide(newIndex);
   };
 
-  // Get testimonials with proper wrapping
   const getVisibleTestimonials = () => {
     const extendedTestimonials = [
       ...testimonials,
@@ -240,18 +234,14 @@ const Testimonials = () => {
           </p>
         </div>
 
-        {/* Carousel Container */}
-        <div className="relative group">
-          {/* Navigation Buttons */}
+        {/* Carousel Container - Hidden on mobile */}
+        <div className="hidden md:block relative group">
           <button
             onClick={goToPrevious}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full p-3 hover:bg-white transition-all duration-300 group-hover:opacity-100 opacity-0 focus:opacity-100 group-hover:-translate-x-4 focus:-translate-x-4 cursor-pointer"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft
-              size={24}
-              className="text-slate-700 hover:text-blue-600 transition-colors"
-            />
+            <ChevronLeft size={24} className="text-slate-700" />
           </button>
 
           <button
@@ -259,37 +249,27 @@ const Testimonials = () => {
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full p-3 hover:bg-white transition-all duration-300 group-hover:opacity-100 opacity-0 focus:opacity-100 group-hover:translate-x-4 focus:translate-x-4 cursor-pointer"
             aria-label="Next testimonial"
           >
-            <ChevronRight
-              size={24}
-              className="text-slate-700 hover:text-blue-600 transition-colors"
-            />
+            <ChevronRight size={24} className="text-slate-700" />
           </button>
 
-          {/* Testimonials Grid */}
           <div className="overflow-hidden rounded-3xl">
             <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
               {getVisibleTestimonials().map((testimonial, index) => (
                 <div
                   key={`${currentIndex}-${index}`}
-                  className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 transform animate-fade-in border border-slate-100 relative overflow-hidden"
+                  className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 transform border border-slate-100 relative overflow-hidden animate-fade-in"
                 >
-                  {/* Decorative Background Element */}
+                  {/* Content */}
                   <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-500 rounded-full opacity-5"></div>
-
-                  {/* Quote Icon */}
                   <div className="absolute top-6 right-6 text-blue-500 opacity-10">
                     <Quote size={48} />
                   </div>
-
-                  {/* Testimonial Content */}
                   <div className="relative z-10 flex flex-col h-full">
                     <div className="flex-1">
                       <p className="text-slate-700 mb-6 leading-relaxed italic text-sm md:text-base">
                         "{testimonial.content}"
                       </p>
                     </div>
-
-                    {/* Author Info */}
                     <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                       <div className="flex items-center">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
@@ -305,9 +285,7 @@ const Testimonials = () => {
                         </div>
                       </div>
                     </div>
-
-                    {/* Company Badge */}
-                    <div className="ml-15">
+                    <div className="mt-2 ml-14">
                       <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
                         @{testimonial.company}
                       </span>
@@ -318,13 +296,12 @@ const Testimonials = () => {
             </div>
           </div>
 
-          {/* Dots Indicator */}
           <div className="flex justify-center mt-10 space-x-2">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-500 cursor-pointer ${
+                className={`w-3 h-3 rounded-full transition-all duration-500 ${
                   index === currentIndex
                     ? "bg-blue-600 w-8"
                     : "bg-slate-300 hover:bg-slate-400"
@@ -335,17 +312,56 @@ const Testimonials = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
+        {/* Mobile Horizontal Scroll */}
+        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-6 pb-6 scrollbar-hide">
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={index}
+              className="snap-start flex-shrink-0 w-[90vw] bg-white p-8 rounded-2xl shadow-sm border border-slate-100"
+            >
+              <div className="flex-1">
+                <p className="text-slate-700 mb-6 leading-relaxed italic text-sm">
+                  "{testimonial.content}"
+                </p>
+              </div>
+              <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                    {testimonial.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-slate-900">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-sm text-slate-600">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-2">
+                <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
+                  @{testimonial.company}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="text-center mt-16">
           <a
             href="https://www.linkedin.com/in/adrianberia2013/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+            className="group inline-flex items-center gap-3 border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer"
           >
-            <Linkedin size={20} />
+            <Linkedin
+              className="w-6 h-6 group-hover:text-white transition-colors duration-300"
+              style={{ fill: "currentColor" }}
+            />
             View All Recommendations on LinkedIn
-            <ArrowRight size={18} />
+            <ArrowRight
+              size={18}
+              className="text-blue-600 group-hover:text-white transition-colors duration-300"
+            />
           </a>
         </div>
       </div>

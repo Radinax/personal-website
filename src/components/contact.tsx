@@ -1,29 +1,33 @@
-import { Mail, Linkedin, Github, Twitter, ExternalLink } from "lucide-react";
+import Github from "@/components/github";
+import Linkedin from "@/components/linkedin";
+import Twitter from "@/components/x";
+import Mail from "@/components/mail";
+import { ExternalLink } from "lucide-react";
 
 const contactLinks = [
   {
-    icon: <Mail className="text-blue-600" size={24} />,
+    icon: <Mail className="text-blue-600 size-12" />,
     label: "Email",
     value: "adrberia@gmail.com",
     href: "mailto:adrberia@gmail.com",
     description: "Get in touch directly",
   },
   {
-    icon: <Linkedin className="text-blue-700" size={24} />,
+    icon: <Linkedin className="text-blue-700 size-12" />,
     label: "LinkedIn",
     value: "linkedin.com/in/adrianberia2013",
     href: "https://www.linkedin.com/in/adrianberia2013/",
     description: "Professional network",
   },
   {
-    icon: <Github className="text-slate-800" size={24} />,
+    icon: <Github className="text-slate-800 size-12" />,
     label: "GitHub",
     value: "github.com/Radinax",
     href: "https://github.com/Radinax",
     description: "Code repositories",
   },
   {
-    icon: <Twitter className="text-blue-500" size={24} />,
+    icon: <Twitter className="text-black size-12" />,
     label: "Twitter",
     value: "@Adrberia",
     href: "https://twitter.com/Adrberia",
@@ -57,12 +61,10 @@ const Contact = () => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-white p-6 rounded-xl hover:bg-slate-50 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
+              className="group bg-white p-6 rounded-xl hover:bg-slate-50 hover:shadow-lg transition-all duration-300"
             >
               <div className="flex flex-col items-center text-center space-y-3">
-                <div className="p-3 bg-white rounded-lg group-hover:scale-110 transition-transform">
-                  {link.icon}
-                </div>
+                <div className="p-3 bg-white rounded-lg">{link.icon}</div>
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">
                     {link.label}
@@ -107,11 +109,9 @@ const Contact = () => {
       {/* Footer */}
       <footer className="mt-20 pt-8 border-t border-slate-200 bg-white h-full pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-slate-500">
-            <p>
-              &copy; {new Date().getFullYear()} Adrian Beria. Building the
-              future of web applications.
-            </p>
+          <div className="text-center text-slate-500 flex flex-col justify-center sm:flex-row gap-1">
+            <p>&copy; {new Date().getFullYear()} Adrian Beria.</p>
+            <p>Building the future of web applications.</p>
           </div>
         </div>
       </footer>
