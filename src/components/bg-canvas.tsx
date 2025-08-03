@@ -13,7 +13,7 @@ class Dot {
   radius: number;
   colour: string;
 
-  constructor(public canvas: HTMLCanvasElement, private colorDot: string[]) {
+  constructor(public canvas: HTMLCanvasElement, colorDot: string[]) {
     this.x = Math.random() * canvas.width;
     this.y = Math.random() * canvas.height;
 

@@ -109,13 +109,13 @@ export const initCanvasElegantDots = (
       dots.forEach((dot) => {
         if (dot === activeDot) return;
 
-        const dx = dot.x - activeDot.x;
-        const dy = dot.y - activeDot.y;
+        const dx = dot.x - activeDot!.x;
+        const dy = dot.y - activeDot!.y;
         const dist = Math.hypot(dx, dy);
 
         if (dist < connectionRadius) {
           ctx.beginPath();
-          ctx.moveTo(activeDot.x, activeDot.y);
+          ctx.moveTo(activeDot!.x, activeDot!.y);
           ctx.lineTo(dot.x, dot.y);
 
           const fadeOut = dist / connectionRadius;
