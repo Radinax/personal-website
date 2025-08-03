@@ -8,10 +8,14 @@
 
   html {
     scroll-behavior: smooth;
+    touch-action: pan-y; /* Allow vertical scrolling, disable horizontal */
+    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on iOS */
   }
 
   body {
     @apply text-slate-900 antialiased;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -35,6 +39,20 @@
       transform: translateY(0);
     }
   }
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Optional: Improve touch behavior */
+#testimonials {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
 }
 
 @theme {

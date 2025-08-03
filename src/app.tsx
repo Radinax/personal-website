@@ -8,7 +8,7 @@ import Career from "@/components/career-path";
 
 function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900">
+    <div className="min-h-screen overflow-x-hidden">
       <Navigation />
       <main className="bg-black opacity-90 blur-[0.5px]">
         <Hero />

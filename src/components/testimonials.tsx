@@ -193,20 +193,18 @@ const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const isProgrammaticScroll = useRef(false);
-
-  const total = testimonials.length;
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
 
   // Go to specific slide (used by dots)
-  const goToSlide = (index: number) => {
+  const goToSlide = useCallback((index: number) => {
     const clampedIndex = Math.max(0, Math.min(index, testimonials.length - 1));
     setCurrentIndex(clampedIndex);
 
     if (!scrollRef.current) return;
 
-    // Set flag to ignore scroll events during animation
     isProgrammaticScroll.current = true;
 
     const containerWidth = scrollRef.current.clientWidth;
@@ -215,80 +213,132 @@ const Testimonials = () => {
       behavior: "smooth",
     });
 
-    // Clear flag after scroll animation ends (~500ms)
-    setTimeout(() => {
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    scrollTimeoutRef.current = setTimeout(() => {
       isProgrammaticScroll.current = false;
     }, 500);
-  };
+  }, []);
 
-  // Mouse drag handlers
+  // Update index based on scroll (debounced)
+  const updateIndexFromScroll = useCallback(() => {
+    if (isProgrammaticScroll.current || !scrollRef.current) return;
+
+    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+
+    scrollTimeoutRef.current = setTimeout(() => {
+      if (!scrollRef.current) return;
+      const containerWidth = scrollRef.current.clientWidth;
+      if (containerWidth === 0) return;
+
+      const scrollPos = scrollRef.current.scrollLeft;
+      const centerScrollPos = scrollPos + containerWidth / 2;
+      const index = Math.round(centerScrollPos / containerWidth);
+      setCurrentIndex(Math.max(0, Math.min(index, testimonials.length - 1)));
+
+      isProgrammaticScroll.current = false;
+    }, 150);
+  }, []);
+
+  // Mouse drag handlers (REAL DRAG LOGIC)
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
     setIsDragging(true);
-    setStartX(e.clientX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft);
+    e.preventDefault(); // Prevent text selection
+
+    startXRef.current = e.clientX - scrollRef.current.offsetLeft;
+    scrollLeftRef.current = scrollRef.current.scrollLeft;
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging || !scrollRef.current) return;
     e.preventDefault();
+
     const x = e.clientX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
+    const walk = (x - startXRef.current) * 1.5; // Adjust sensitivity
+    scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    updateIndexFromScroll(); // Sync index after drag
   };
 
-  // Update current index based on scroll position
-  const updateIndexFromScroll = useCallback(() => {
-    if (isProgrammaticScroll.current) return; // ← Skip if we triggered it
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+  };
 
-    if (!scrollRef.current) return;
-    const containerWidth = scrollRef.current.clientWidth;
-    const scrollPos = scrollRef.current.scrollLeft;
-    const index = Math.round(scrollPos / containerWidth);
-    setCurrentIndex(Math.max(0, Math.min(index, testimonials.length - 1)));
-  }, []);
+  // Touch handlers (keep native scroll)
+  const handleTouchStart = () => {
+    setIsDragging(true);
+  };
 
-  // Sync scroll on mount and resize
+  const handleTouchMove = () => {
+    // Do nothing — let native scroll handle it
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
+
+  // Listen to scroll events
   useEffect(() => {
     const element = scrollRef.current;
-    if (element) {
-      const containerWidth = element.clientWidth;
-      element.scrollTo({
+    if (!element) return;
+
+    element.addEventListener("scroll", updateIndexFromScroll, {
+      passive: true,
+    });
+
+    return () => {
+      element.removeEventListener("scroll", updateIndexFromScroll);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
+  }, [updateIndexFromScroll]);
+
+  // Scroll to current index when it changes
+  useEffect(() => {
+    if (!scrollRef.current) return;
+
+    const containerWidth = scrollRef.current.clientWidth;
+    const expectedScroll = currentIndex * containerWidth;
+    const currentScroll = scrollRef.current.scrollLeft;
+
+    if (Math.abs(currentScroll - expectedScroll) > 1) {
+      isProgrammaticScroll.current = true;
+      scrollRef.current.scrollTo({
+        left: expectedScroll,
+        behavior: "smooth",
+      });
+
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 500);
+    }
+  }, [currentIndex]);
+
+  // Handle resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (!scrollRef.current) return;
+
+      isProgrammaticScroll.current = true;
+      const containerWidth = scrollRef.current.clientWidth;
+      scrollRef.current.scrollTo({
         left: currentIndex * containerWidth,
         behavior: "auto",
       });
 
-      // Listen to scroll (passive for performance)
-      element.addEventListener("scroll", updateIndexFromScroll, {
-        passive: true,
-      });
-      return () => {
-        element.removeEventListener("scroll", updateIndexFromScroll);
-      };
-    }
-  }, [currentIndex, total, updateIndexFromScroll]);
-
-  // Re-sync on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (!scrollRef.current) return;
-      const containerWidth = scrollRef.current.clientWidth;
-      isProgrammaticScroll.current = true;
-      scrollRef.current.scrollTo({
-        left: currentIndex * containerWidth,
-        behavior: "auto", // instant
-      });
-      setTimeout(() => {
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      scrollTimeoutRef.current = setTimeout(() => {
         isProgrammaticScroll.current = false;
       }, 100);
     };
+
     window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+    };
   }, [currentIndex]);
 
   return (
@@ -304,16 +354,20 @@ const Testimonials = () => {
           </p>
         </div>
 
-        {/* Draggable Testimonial Carousel */}
+        {/* Draggable Carousel */}
         <div
           ref={scrollRef}
-          className={`flex overflow-x-hidden snap-x snap-mandatory scroll-smooth cursor-grab ${
+          className={`flex overflow-x-auto snap-x snap-mandatory scroll-smooth cursor-grab ${
             isDragging ? "cursor-grabbing" : ""
           } scrollbar-hide px-4`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onScroll={updateIndexFromScroll}
         >
           {testimonials.map((testimonial, index) => (
             <div
@@ -324,7 +378,6 @@ const Testimonials = () => {
                 <p className="text-slate-700 mb-8 leading-relaxed italic text-lg">
                   "{testimonial.content}"
                 </p>
-
                 <div className="flex items-center">
                   <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-white font-bold mr-4">
                     {testimonial.name.charAt(0)}

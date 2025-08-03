@@ -1,160 +1,149 @@
-// src/lib/canvasElegantDots.ts
+// @/components/canvas-elegant-dots.ts
 
-interface Dot {
-  x: number;
-  y: number;
-  radius: number;
-  vx: number;
-  vy: number;
-  colour: string;
-}
-
-interface Mouse {
-  x: number;
-  y: number;
+interface ElegantDotsOptions {
+  colorDot?: string[];
+  connectionRadius?: number;
+  activationRadius?: number;
+  lineOpacity?: number;
+  floatSpeed?: number;
 }
 
 export const initCanvasElegantDots = (
   canvas: HTMLCanvasElement,
-  options: {
-    colorDot?: string[];
-    connectionRadius?: number; // max distance to connect
-    activationRadius?: number; // how close mouse needs to be
-    baseRadius?: number;
-    hoverRadius?: number;
-    lineOpacity?: number;
-    floatSpeed?: number;
-  } = {}
-): (() => void) => {
+  options: ElegantDotsOptions = {}
+) => {
+  const {
+    colorDot = ["#ffffff"],
+    connectionRadius = 150,
+    activationRadius = 300,
+    lineOpacity = 0.5,
+    floatSpeed = 0.5,
+  } = options;
+
   const ctx = canvas.getContext("2d");
   if (!ctx) return () => {};
 
-  // Options
-  const colorDot = options.colorDot || [
-    "rgb(81, 162, 233)",
-    "rgb(255, 77, 90)",
-  ];
-  const connectionRadius = options.connectionRadius ?? 100;
-  const activationRadius = options.activationRadius ?? 120;
-  const baseRadius = options.baseRadius ?? 1.2;
-  const hoverRadius = options.hoverRadius ?? 2.5;
-  const lineOpacity = options.lineOpacity ?? 0.6;
-  const floatSpeed = options.floatSpeed ?? 0.3;
-
-  // Mouse state
-  const mouse: Mouse = { x: Infinity, y: Infinity };
-
-  // Resize
+  // ✅ 1. Resize canvas properly
   const resize = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
+
+    ctx.scale(dpr, dpr);
   };
+
   resize();
-
-  // Create dots
-  const dots: Dot[] = Array.from({ length: 180 }, () => ({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: baseRadius,
-    vx: (Math.random() - 0.5) * floatSpeed,
-    vy: (Math.random() - 0.5) * floatSpeed,
-    colour: colorDot[Math.floor(Math.random() * colorDot.length)],
-  }));
-
-  // Animation
-  const animate = () => {
-    // Slight trail for soft fade
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    let activeDot: Dot | null = null;
-
-    // Update floating motion
-    dots.forEach((dot) => {
-      dot.x += dot.vx;
-      dot.y += dot.vy;
-
-      if (dot.x < 0 || dot.x > canvas.width) dot.vx = -dot.vx;
-      if (dot.y < 0 || dot.y > canvas.height) dot.vy = -dot.vy;
-    });
-
-    // Find closest dot to mouse
-    let minDist = activationRadius;
-    dots.forEach((dot) => {
-      const dx = dot.x - mouse.x;
-      const dy = dot.y - mouse.y;
-      const dist = Math.hypot(dx, dy);
-
-      if (dist < minDist) {
-        minDist = dist;
-        activeDot = dot;
-      }
-    });
-
-    // Draw dots
-    dots.forEach((dot) => {
-      const isActive = dot === activeDot;
-      const r = isActive ? hoverRadius : dot.radius;
-
-      ctx.beginPath();
-      ctx.arc(dot.x, dot.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = dot.colour;
-      ctx.globalAlpha = isActive ? 1 : 0.6;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-    });
-
-    // Draw connections from active dot
-    if (activeDot) {
-      dots.forEach((dot) => {
-        if (dot === activeDot) return;
-
-        const dx = dot.x - activeDot!.x;
-        const dy = dot.y - activeDot!.y;
-        const dist = Math.hypot(dx, dy);
-
-        if (dist < connectionRadius) {
-          ctx.beginPath();
-          ctx.moveTo(activeDot!.x, activeDot!.y);
-          ctx.lineTo(dot.x, dot.y);
-
-          const fadeOut = dist / connectionRadius;
-          const alpha = lineOpacity * (1 - fadeOut);
-
-          ctx.strokeStyle = `rgba(241, 245, 249, ${alpha})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      });
-    }
-
-    animationId = requestAnimationFrame(animate);
-  };
-
-  let animationId: number | null = null;
-  animate();
-
-  // Mouse and touch
-  const handleMove = (x: number, y: number) => {
-    mouse.x = x;
-    mouse.y = y;
-  };
-
-  const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
-  const handleTouchMove = (e: TouchEvent) => {
-    e.preventDefault();
-    const t = e.touches[0];
-    handleMove(t.clientX, t.clientY);
-  };
-
-  window.addEventListener("mousemove", handleMouseMove);
-  window.addEventListener("touchmove", handleTouchMove, { passive: false });
   window.addEventListener("resize", resize);
 
+  // ✅ 2. Dot setup
+  const dots: Dot[] = [];
+  const numDots = Math.floor((window.innerWidth * window.innerHeight) / 10000);
+
+  class Dot {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    radius: number;
+
+    constructor() {
+      this.x = Math.random() * window.innerWidth;
+      this.y = Math.random() * window.innerHeight;
+      this.vx = (Math.random() - 0.5) * floatSpeed;
+      this.vy = (Math.random() - 0.5) * floatSpeed;
+      this.radius = Math.random() * 1.5 + 0.5;
+    }
+
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+
+      if (this.x < 0 || this.x > window.innerWidth) this.vx *= -1;
+      if (this.y < 0 || this.y > window.innerHeight) this.vy *= -1;
+    }
+
+    draw() {
+      if (!ctx) return;
+      ctx.fillStyle = colorDot[Math.floor(Math.random() * colorDot.length)];
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Initialize dots
+  for (let i = 0; i < numDots; i++) {
+    dots.push(new Dot());
+  }
+
+  // Mouse tracking
+  const mouse = { x: 0, y: 0 };
+  window.addEventListener("mousemove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  // Animation loop
+  const animate = () => {
+    if (!canvas?.isConnected) return;
+
+    // ✅ Clear only visible area
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    let dot, dx, dy, dist;
+
+    // Draw lines
+    for (let i = 0; i < dots.length; i++) {
+      for (let j = i + 1; j < dots.length; j++) {
+        dot = dots[j];
+        dx = dots[i].x - dot.x;
+        dy = dots[i].y - dot.y;
+        dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < connectionRadius) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${
+            lineOpacity * (1 - dist / connectionRadius)
+          })`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(dots[i].x, dots[i].y);
+          ctx.lineTo(dot.x, dot.y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Activate on mouse
+    for (let i = 0; i < dots.length; i++) {
+      dx = mouse.x - dots[i].x;
+      dy = mouse.y - dots[i].y;
+      dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < activationRadius) {
+        dots[i].vx += (dx / dist) * 0.1;
+        dots[i].vy += (dy / dist) * 0.1;
+      }
+
+      dots[i].update();
+      dots[i].draw();
+    }
+
+    requestAnimationFrame(animate);
+  };
+
+  animate();
+
+  // Cleanup
   return () => {
-    if (animationId) cancelAnimationFrame(animationId);
-    window.removeEventListener("mousemove", handleMouseMove);
-    window.removeEventListener("touchmove", handleTouchMove);
     window.removeEventListener("resize", resize);
+    window.removeEventListener("mousemove", () => {});
+    // No way to cancel rAF from outside, but we check `canvas.isConnected`
   };
 };
