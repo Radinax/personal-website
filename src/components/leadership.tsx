@@ -2,7 +2,7 @@ import { Users, Target, Lightbulb, TrendingUp } from "lucide-react";
 
 const leadershipPoints = [
   {
-    icon: <Users className="text-blue-600" size={24} />,
+    icon: <Users className="text-red-500" size={24} />,
     title: "Team Scaling & Mentorship",
     description:
       "Successfully scaled frontend teams and mentored junior developers, fostering collaborative environments that drive innovation and professional growth.",
@@ -35,7 +35,7 @@ const Leadership = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
             Leadership & Impact
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
+          <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
             My leadership philosophy centers on hands-on technical excellence
             combined with team empowerment. I believe in fostering collaborative
@@ -67,7 +67,7 @@ const Leadership = () => {
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-blue-600 to-emerald-600 rounded-2xl p-8 text-white text-center">
+        <div className="mt-16 bg-gradient-to-r from-red-500 to-emerald-600 rounded-2xl p-8 text-white text-center">
           <h3 className="text-2xl font-bold mb-4">
             Ready to Lead Your Next Project
           </h3>

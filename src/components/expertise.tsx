@@ -1,50 +1,9 @@
-import { Code, Layers, Settings, Target, Users2, Zap } from "lucide-react";
-
-const skillCategories = [
-  {
-    title: "Languages & Frameworks",
-    icon: <Code className="text-blue-600" size={24} />,
-    skills: [
-      "JavaScript (ES6+)",
-      "TypeScript",
-      "React",
-      "Next.js",
-      "HTML5",
-      "CSS3",
-    ],
-  },
-  {
-    title: "Tools & Technologies",
-    icon: <Settings className="text-slate-600" size={24} />,
-    skills: ["Vite", "Webpack", "Git", "Docker", "Redux", "Tailwind CSS"],
-  },
-  {
-    title: "Testing & Quality",
-    icon: <Target className="text-emerald-600" size={24} />,
-    skills: [
-      "Cypress",
-      "Jest",
-      "Unit Testing",
-      "Integration Testing",
-      "Code Reviews",
-    ],
-  },
-  {
-    title: "Architecture & APIs",
-    icon: <Layers className="text-purple-600" size={24} />,
-    skills: [
-      "CI/CD Pipelines",
-      "GraphQL",
-      "RESTful APIs",
-      "Microservices",
-      "Shadcn UI",
-    ],
-  },
-];
+import { skillCategories } from "@/conts/skills";
+import { Layers, Target, Users2, Zap } from "lucide-react";
 
 const focusAreas = [
   {
-    icon: <Users2 className="text-blue-600" size={20} />,
+    icon: <Users2 className="text-red-500" size={20} />,
     title: "B2B SaaS Solutions",
     description: "Enterprise-grade applications for business users",
   },
@@ -73,7 +32,7 @@ const Expertise = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
             My Expertise
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
+          <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
           <p className="text-lg text-slate-600">
             Technical skills and specialized focus areas that drive exceptional
             results

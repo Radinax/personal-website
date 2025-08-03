@@ -1,40 +1,21 @@
-import { Code2, Users, Zap } from "lucide-react";
-
-const highlights = [
-  {
-    icon: <Code2 className="text-blue-600" size={24} />,
-    title: "Technical Excellence",
-    description:
-      "Expert in React, TypeScript, and modern frontend architecture",
-  },
-  {
-    icon: <Users className="text-emerald-600" size={24} />,
-    title: "Team Leadership",
-    description: "Scaling product teams and mentoring developers",
-  },
-  {
-    icon: <Zap className="text-amber-500" size={24} />,
-    title: "Business Impact",
-    description: "Delivering solutions that drive efficiency and growth",
-  },
-];
+import HeroImage from "/pic.png";
 
 const About = () => {
   return (
-    <section id="about" className="py-20 bg-white">
+    <section id="about" className="py-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             About Me
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
+          <div className="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
           <div className="space-y-6">
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <p className="text-lg text-white leading-relaxed">
               As a Senior Frontend Lead Developer,{" "}
-              <b>
+              <b className="text-red-400">
                 I specialize in building sophisticated B2B platforms and
                 internal tools using React and TypeScript
               </b>
@@ -43,7 +24,7 @@ const About = () => {
               understanding that I've applied to web development since 2015.
             </p>
 
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <p className="text-lg text-white leading-relaxed">
               From freelance web development with HTML, CSS, JavaScript, and PHP
               (2015-2018) to professional development leadership since 2018,
               I've consistently focused on solving complex problems for business
@@ -51,8 +32,8 @@ const About = () => {
               and leading cross-functional teams to deliver scalable solutions.
             </p>
 
-            <p className="text-lg text-slate-600 leading-relaxed">
-              <b>
+            <p className="text-lg text-white leading-relaxed">
+              <b className="text-red-400">
                 My expertise lies in transforming complex business requirements
                 into intuitive, efficient interfaces that empower professional
                 users and drive operational excellence
@@ -62,25 +43,44 @@ const About = () => {
             </p>
           </div>
 
-          <div className="space-y-6">
-            {highlights.map((highlight, index) => (
-              <div
-                key={index}
-                className="bg-slate-50 p-6 rounded-xl hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="p-2 bg-white rounded-lg shadow-sm">
-                    {highlight.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold text-slate-900">
-                    {highlight.title}
-                  </h3>
-                </div>
-                <p className="text-slate-600">{highlight.description}</p>
-              </div>
-            ))}
+          <div className="relative flex justify-center">
+            {/* Bottom "Paper" Layer (background) */}
+            <div
+              className="absolute bg-zinc-800 rounded-3xl shadow-lg"
+              style={{
+                width: "90%",
+                minWidth: "320px",
+                maxWidth: "1020px",
+                height: "100%",
+                transform: "translate(30px,30px)", // Offset to bottom-right
+                zIndex: 0,
+              }}
+            ></div>
+
+            {/* Top Image Card (foreground) */}
+            <div
+              className="relative z-10"
+              style={{
+                width: "90%",
+                minWidth: "320px",
+                maxWidth: "1020px",
+              }}
+            >
+              <img
+                src={HeroImage}
+                alt="Dashboard preview"
+                className="object-contain rounded-3xl shadow-2xl w-full h-auto"
+              />
+            </div>
           </div>
         </div>
+      </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+        <q className="text-lg text-white leading-relaxed">
+          From my early days as a freelance web developer to leading teams in
+          building complex B2B platforms, my journey has been driven by a
+          passion for creating impactful user experiences.
+        </q>
       </div>
     </section>
   );

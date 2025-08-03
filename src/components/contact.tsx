@@ -6,7 +6,7 @@ import { ExternalLink } from "lucide-react";
 
 const contactLinks = [
   {
-    icon: <Mail className="text-blue-600 size-12" />,
+    icon: <Mail className="text-red-500 size-12" />,
     label: "Email",
     value: "adrberia@gmail.com",
     href: "mailto:adrberia@gmail.com",
@@ -37,17 +37,14 @@ const contactLinks = [
 
 const Contact = () => {
   return (
-    <section
-      id="contact"
-      className="pt-20 bg-gradient-to-br from-slate-50 to-blue-50"
-    >
+    <section id="contact" className="pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Connect with Me
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-lg text-slate-600">
+          <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
+          <p className="text-lg text-white">
             Ready to discuss your next project or explore collaboration
             opportunities? I'm always interested in connecting with fellow
             professionals and innovative companies.
@@ -61,7 +58,7 @@ const Contact = () => {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-white p-6 rounded-xl hover:bg-slate-50 hover:shadow-lg transition-all duration-300"
+              className="group bg-white p-6 rounded-xl hover:bg-slate-50 hover:shadow-lg transition-all duration-300 relative"
             >
               <div className="flex flex-col items-center text-center space-y-3">
                 <div className="p-3 bg-white rounded-lg">{link.icon}</div>
@@ -72,13 +69,13 @@ const Contact = () => {
                   <p className="text-sm text-slate-600 mb-2">
                     {link.description}
                   </p>
-                  <p className="text-sm font-medium text-blue-600 break-all">
+                  <p className="text-sm font-medium text-red-500 break-all">
                     {link.value}
                   </p>
                 </div>
                 <ExternalLink
                   size={16}
-                  className="text-slate-400 group-hover:text-blue-600 transition-colors"
+                  className="absolute top-3 right-5 text-slate-400 group-hover:text-red-500 transition-colors"
                 />
               </div>
             </a>
@@ -98,7 +95,7 @@ const Contact = () => {
             href="https://adrian-beria-blog.netlify.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
           >
             Visit My Blog
             <ExternalLink size={18} />
@@ -107,9 +104,9 @@ const Contact = () => {
       </div>
 
       {/* Footer */}
-      <footer className="mt-20 pt-8 border-t border-slate-200 bg-white h-full pb-20">
+      <footer className="mt-30 pt-8 h-full py-10 bg-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-slate-500 flex flex-col justify-center sm:flex-row gap-1">
+          <div className="text-center text-white flex flex-col justify-center sm:flex-row gap-1 font-semibold">
             <p>&copy; {new Date().getFullYear()} Adrian Beria.</p>
             <p>Building the future of web applications.</p>
           </div>

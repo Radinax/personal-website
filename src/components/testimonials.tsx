@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Quote, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Linkedin from "@/components/linkedin";
+import { ArrowRight } from "lucide-react";
 
 const testimonials = [
   {
@@ -191,142 +191,142 @@ const testimonials = [
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const isProgrammaticScroll = useRef(false);
 
+  const total = testimonials.length;
+
+  // Go to specific slide (used by dots)
   const goToSlide = (index: number) => {
-    setCurrentIndex(index);
+    const clampedIndex = Math.max(0, Math.min(index, testimonials.length - 1));
+    setCurrentIndex(clampedIndex);
+
+    if (!scrollRef.current) return;
+
+    // Set flag to ignore scroll events during animation
+    isProgrammaticScroll.current = true;
+
+    const containerWidth = scrollRef.current.clientWidth;
+    scrollRef.current.scrollTo({
+      left: clampedIndex * containerWidth,
+      behavior: "smooth",
+    });
+
+    // Clear flag after scroll animation ends (~500ms)
+    setTimeout(() => {
+      isProgrammaticScroll.current = false;
+    }, 500);
   };
 
-  const goToPrevious = () => {
-    const newIndex =
-      currentIndex === 0 ? testimonials.length - 1 : currentIndex - 1;
-    goToSlide(newIndex);
+  // Mouse drag handlers
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.clientX - scrollRef.current.offsetLeft);
+    setScrollLeft(scrollRef.current.scrollLeft);
   };
 
-  const goToNext = () => {
-    const newIndex =
-      currentIndex === testimonials.length - 1 ? 0 : currentIndex + 1;
-    goToSlide(newIndex);
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !scrollRef.current) return;
+    e.preventDefault();
+    const x = e.clientX - scrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    scrollRef.current.scrollLeft = scrollLeft - walk;
   };
 
-  const getVisibleTestimonials = () => {
-    const extendedTestimonials = [
-      ...testimonials,
-      ...testimonials,
-      ...testimonials,
-    ];
-    const startIndex = currentIndex + testimonials.length;
-    return extendedTestimonials.slice(startIndex, startIndex + 3);
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    updateIndexFromScroll(); // Sync index after drag
   };
+
+  // Update current index based on scroll position
+  const updateIndexFromScroll = useCallback(() => {
+    if (isProgrammaticScroll.current) return; // ← Skip if we triggered it
+
+    if (!scrollRef.current) return;
+    const containerWidth = scrollRef.current.clientWidth;
+    const scrollPos = scrollRef.current.scrollLeft;
+    const index = Math.round(scrollPos / containerWidth);
+    setCurrentIndex(Math.max(0, Math.min(index, testimonials.length - 1)));
+  }, []);
+
+  // Sync scroll on mount and resize
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (element) {
+      const containerWidth = element.clientWidth;
+      element.scrollTo({
+        left: currentIndex * containerWidth,
+        behavior: "auto",
+      });
+
+      // Listen to scroll (passive for performance)
+      element.addEventListener("scroll", updateIndexFromScroll, {
+        passive: true,
+      });
+      return () => {
+        element.removeEventListener("scroll", updateIndexFromScroll);
+      };
+    }
+  }, [currentIndex, total, updateIndexFromScroll]);
+
+  // Re-sync on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (!scrollRef.current) return;
+      const containerWidth = scrollRef.current.clientWidth;
+      isProgrammaticScroll.current = true;
+      scrollRef.current.scrollTo({
+        left: currentIndex * containerWidth,
+        behavior: "auto", // instant
+      });
+      setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 100);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [currentIndex]);
 
   return (
-    <section
-      id="testimonials"
-      className="py-20 bg-gradient-to-br from-slate-50 to-blue-50"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+    <section id="testimonials" className="py-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             What Colleagues Say
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-emerald-500 mx-auto mb-8 rounded-full"></div>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          <div className="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
+          <p className="text-lg text-white/90">
             Testimonials from industry professionals who have worked with me
           </p>
         </div>
 
-        {/* Carousel Container - Hidden on mobile */}
-        <div className="hidden md:block relative group">
-          <button
-            onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full p-3 hover:bg-white transition-all duration-300 group-hover:opacity-100 opacity-0 focus:opacity-100 group-hover:-translate-x-4 focus:-translate-x-4 cursor-pointer"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft size={24} className="text-slate-700" />
-          </button>
-
-          <button
-            onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 z-10 bg-white/80 backdrop-blur-sm shadow-lg rounded-full p-3 hover:bg-white transition-all duration-300 group-hover:opacity-100 opacity-0 focus:opacity-100 group-hover:translate-x-4 focus:translate-x-4 cursor-pointer"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight size={24} className="text-slate-700" />
-          </button>
-
-          <div className="overflow-hidden rounded-3xl">
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
-              {getVisibleTestimonials().map((testimonial, index) => (
-                <div
-                  key={`${currentIndex}-${index}`}
-                  className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 transform border border-slate-100 relative overflow-hidden animate-fade-in"
-                >
-                  {/* Content */}
-                  <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-500 rounded-full opacity-5"></div>
-                  <div className="absolute top-6 right-6 text-blue-500 opacity-10">
-                    <Quote size={48} />
-                  </div>
-                  <div className="relative z-10 flex flex-col h-full">
-                    <div className="flex-1">
-                      <p className="text-slate-700 mb-6 leading-relaxed italic text-sm md:text-base">
-                        "{testimonial.content}"
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                      <div className="flex items-center">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                          {testimonial.name.charAt(0)}
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-slate-900">
-                            {testimonial.name}
-                          </h4>
-                          <p className="text-sm text-slate-600">
-                            {testimonial.role}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-2 ml-14">
-                      <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
-                        @{testimonial.company}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex justify-center mt-10 space-x-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-500 ${
-                  index === currentIndex
-                    ? "bg-blue-600 w-8"
-                    : "bg-slate-300 hover:bg-slate-400"
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Mobile Horizontal Scroll */}
-        <div className="md:hidden overflow-x-auto snap-x snap-mandatory flex gap-6 pb-6 scrollbar-hide">
+        {/* Draggable Testimonial Carousel */}
+        <div
+          ref={scrollRef}
+          className={`flex overflow-x-hidden snap-x snap-mandatory scroll-smooth cursor-grab ${
+            isDragging ? "cursor-grabbing" : ""
+          } scrollbar-hide px-4`}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="snap-start flex-shrink-0 w-[90vw] bg-white p-8 rounded-2xl shadow-sm border border-slate-100"
+              className="flex-shrink-0 w-full snap-center px-4 select-none"
             >
-              <div className="flex-1">
-                <p className="text-slate-700 mb-6 leading-relaxed italic text-sm">
+              <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 relative">
+                <p className="text-slate-700 mb-8 leading-relaxed italic text-lg">
                   "{testimonial.content}"
                 </p>
-              </div>
-              <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+
                 <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                  <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-white font-bold mr-4">
                     {testimonial.name.charAt(0)}
                   </div>
                   <div>
@@ -336,31 +336,48 @@ const Testimonials = () => {
                     <p className="text-sm text-slate-600">{testimonial.role}</p>
                   </div>
                 </div>
-              </div>
-              <div className="mt-2">
-                <span className="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full font-medium">
-                  @{testimonial.company}
-                </span>
+                <div className="mt-2 ml-16">
+                  <span className="inline-block bg-red-50 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
+                    @{testimonial.company}
+                  </span>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
+        {/* Dots Navigation */}
+        <div className="flex justify-center mt-6 space-x-2">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? "bg-red-500 w-8"
+                  : "bg-slate-400 hover:bg-slate-500"
+              }`}
+              aria-label={`Go to testimonial ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* CTA Button */}
         <div className="text-center mt-16">
           <a
             href="https://www.linkedin.com/in/adrianberia2013/"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-105 cursor-pointer"
+            className="group inline-flex items-center gap-3 border-2 border-blue-500 text-blue-500 px-8 py-4 rounded-lg font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300"
           >
             <Linkedin
-              className="w-6 h-6 group-hover:text-white transition-colors duration-300"
+              className="w-6 h-6 group-hover:text-white transition-colors duration-300 bg-white group-hover:bg-blue-500"
               style={{ fill: "currentColor" }}
             />
             View All Recommendations on LinkedIn
             <ArrowRight
               size={18}
-              className="text-blue-600 group-hover:text-white transition-colors duration-300"
+              className="text-blue-500 group-hover:text-white transition-colors duration-300"
             />
           </a>
         </div>

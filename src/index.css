@@ -1,8 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@200..800&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 @layer base {
   * {
-    @apply font-['Inter'];
+    @apply font-montserrat;
   }
 
   html {
@@ -16,7 +17,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-red-500 to-emerald-600 bg-clip-text text-transparent;
   }
 
   .animate-fade-in {
@@ -34,4 +35,8 @@
       transform: translateY(0);
     }
   }
+}
+
+@theme {
+  --font-montserrat: "Montserrat", sans-serif;
 }

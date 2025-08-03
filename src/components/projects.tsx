@@ -93,14 +93,14 @@ const projects = [
 
 const Projects = () => {
   return (
-    <section id="projects" className="py-20 bg-white">
+    <section id="projects" className="py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Impactful Solutions
           </h2>
-          <div className="w-24 h-1 bg-blue-600 mx-auto mb-8"></div>
-          <p className="text-lg text-slate-600">
+          <div className="w-24 h-1 bg-red-500 mx-auto mb-8"></div>
+          <p className="text-lg text-white">
             Key projects that demonstrate expertise in B2B platforms and
             enterprise solutions
           </p>
@@ -115,16 +115,11 @@ const Projects = () => {
               <div className="grid lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2">
                   <div className="flex items-center gap-4 mb-4">
-                    <div
-                      className={`p-3 bg-gradient-to-r ${project.gradient} rounded-xl text-white`}
-                    >
-                      {project.icon}
-                    </div>
                     <div>
                       <h3 className="text-2xl font-bold text-slate-900">
                         {project.title}
                       </h3>
-                      <p className="text-blue-600 font-medium">
+                      <p className="text-red-500 font-medium">
                         {project.role} • {project.company}
                       </p>
                     </div>
@@ -134,9 +129,9 @@ const Projects = () => {
                     {project.description}
                   </p>
 
-                  <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg mb-6">
+                  <div className="bg-gradient-to-r from-red-50 to-blue-50 p-4 rounded-lg mb-6">
                     <p className="text-slate-800 font-medium">
-                      <span className="text-emerald-600 font-semibold">
+                      <span className="text-red-600 font-semibold">
                         Impact:
                       </span>{" "}
                       {project.impact}
@@ -165,7 +160,7 @@ const Projects = () => {
                     href={project.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full bg-white border-2 border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
+                    className="group w-full bg-white border-2 border-red-500 text-red-500 px-6 py-3 rounded-lg font-semibold hover:bg-red-500 hover:text-white transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     View Project
                     <ArrowRight
