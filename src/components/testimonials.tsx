@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
 import Linkedin from "@/components/linkedin";
 import { ArrowRight } from "lucide-react";
+import ScrollableCarousel from "@/components/scrollable-carousel";
 
 const testimonials = [
   {
@@ -190,157 +190,6 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const isProgrammaticScroll = useRef(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
-
-  // Go to specific slide (used by dots)
-  const goToSlide = useCallback((index: number) => {
-    const clampedIndex = Math.max(0, Math.min(index, testimonials.length - 1));
-    setCurrentIndex(clampedIndex);
-
-    if (!scrollRef.current) return;
-
-    isProgrammaticScroll.current = true;
-
-    const containerWidth = scrollRef.current.clientWidth;
-    scrollRef.current.scrollTo({
-      left: clampedIndex * containerWidth,
-      behavior: "smooth",
-    });
-
-    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    scrollTimeoutRef.current = setTimeout(() => {
-      isProgrammaticScroll.current = false;
-    }, 500);
-  }, []);
-
-  // Update index based on scroll (debounced)
-  const updateIndexFromScroll = useCallback(() => {
-    if (isProgrammaticScroll.current || !scrollRef.current) return;
-
-    if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-
-    scrollTimeoutRef.current = setTimeout(() => {
-      if (!scrollRef.current) return;
-      const containerWidth = scrollRef.current.clientWidth;
-      if (containerWidth === 0) return;
-
-      const scrollPos = scrollRef.current.scrollLeft;
-      const centerScrollPos = scrollPos + containerWidth / 2;
-      const index = Math.round(centerScrollPos / containerWidth);
-      setCurrentIndex(Math.max(0, Math.min(index, testimonials.length - 1)));
-
-      isProgrammaticScroll.current = false;
-    }, 150);
-  }, []);
-
-  // Mouse drag handlers (REAL DRAG LOGIC)
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!scrollRef.current) return;
-    setIsDragging(true);
-    e.preventDefault(); // Prevent text selection
-
-    startXRef.current = e.clientX - scrollRef.current.offsetLeft;
-    scrollLeftRef.current = scrollRef.current.scrollLeft;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging || !scrollRef.current) return;
-    e.preventDefault();
-
-    const x = e.clientX - scrollRef.current.offsetLeft;
-    const walk = (x - startXRef.current) * 1.5; // Adjust sensitivity
-    scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  // Touch handlers (keep native scroll)
-  const handleTouchStart = () => {
-    setIsDragging(true);
-  };
-
-  const handleTouchMove = () => {
-    // Do nothing — let native scroll handle it
-  };
-
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-  };
-
-  // Listen to scroll events
-  useEffect(() => {
-    const element = scrollRef.current;
-    if (!element) return;
-
-    element.addEventListener("scroll", updateIndexFromScroll, {
-      passive: true,
-    });
-
-    return () => {
-      element.removeEventListener("scroll", updateIndexFromScroll);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    };
-  }, [updateIndexFromScroll]);
-
-  // Scroll to current index when it changes
-  useEffect(() => {
-    if (!scrollRef.current) return;
-
-    const containerWidth = scrollRef.current.clientWidth;
-    const expectedScroll = currentIndex * containerWidth;
-    const currentScroll = scrollRef.current.scrollLeft;
-
-    if (Math.abs(currentScroll - expectedScroll) > 1) {
-      isProgrammaticScroll.current = true;
-      scrollRef.current.scrollTo({
-        left: expectedScroll,
-        behavior: "smooth",
-      });
-
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        isProgrammaticScroll.current = false;
-      }, 500);
-    }
-  }, [currentIndex]);
-
-  // Handle resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (!scrollRef.current) return;
-
-      isProgrammaticScroll.current = true;
-      const containerWidth = scrollRef.current.clientWidth;
-      scrollRef.current.scrollTo({
-        left: currentIndex * containerWidth,
-        behavior: "auto",
-      });
-
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-      scrollTimeoutRef.current = setTimeout(() => {
-        isProgrammaticScroll.current = false;
-      }, 100);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
-    };
-  }, [currentIndex]);
-
   return (
     <section id="testimonials" className="py-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -354,66 +203,32 @@ const Testimonials = () => {
           </p>
         </div>
 
-        {/* Draggable Carousel */}
-        <div
-          ref={scrollRef}
-          className={`flex overflow-x-auto snap-x snap-mandatory scroll-smooth cursor-grab ${
-            isDragging ? "cursor-grabbing" : ""
-          } scrollbar-hide px-4`}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          onScroll={updateIndexFromScroll}
-        >
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="flex-shrink-0 w-full snap-center px-4 select-none"
-            >
-              <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 relative">
-                <p className="text-slate-700 mb-8 leading-relaxed italic text-lg">
-                  "{testimonial.content}"
-                </p>
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                    {testimonial.name.charAt(0)}
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-900">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-sm text-slate-600">{testimonial.role}</p>
-                  </div>
+        <ScrollableCarousel
+          items={testimonials}
+          renderItem={(testimonial) => (
+            <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
+              <p className="text-slate-700 mb-8 leading-relaxed italic text-lg">
+                "{testimonial.content}"
+              </p>
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-red-400 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                  {testimonial.name.charAt(0)}
                 </div>
-                <div className="mt-2 ml-16">
-                  <span className="inline-block bg-red-50 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
-                    @{testimonial.company}
-                  </span>
+                <div>
+                  <h4 className="font-semibold text-slate-900">
+                    {testimonial.name}
+                  </h4>
+                  <p className="text-sm text-slate-600">{testimonial.role}</p>
                 </div>
               </div>
+              <div className="mt-2 ml-16">
+                <span className="inline-block bg-red-50 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
+                  @{testimonial.company}
+                </span>
+              </div>
             </div>
-          ))}
-        </div>
-
-        {/* Dots Navigation */}
-        <div className="flex justify-center mt-6 space-x-2">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? "bg-red-500 w-8"
-                  : "bg-slate-400 hover:bg-slate-500"
-              }`}
-              aria-label={`Go to testimonial ${index + 1}`}
-            />
-          ))}
-        </div>
+          )}
+        />
 
         {/* CTA Button */}
         <div className="text-center mt-16">

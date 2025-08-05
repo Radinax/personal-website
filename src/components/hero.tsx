@@ -2,7 +2,7 @@ import XformerlyTwitter from "@/components/x";
 import Linkedin from "@/components/linkedin";
 import Github from "@/components/github";
 import { ChevronDown, ArrowRight } from "lucide-react";
-import ProfileImage from "/profile-image.jpg";
+import ProfileImage from "/profile-image.webp";
 import { useCanvasDots } from "@/hooks/use-canvas-dots";
 
 const Hero = () => {
@@ -12,7 +12,7 @@ const Hero = () => {
     connectionRadius: 110,
     activationRadius: 130,
     lineOpacity: 0.5,
-    floatSpeed: 0.3,
+    floatSpeed: 0.1,
   });
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
