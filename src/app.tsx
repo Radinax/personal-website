@@ -5,6 +5,7 @@ import Navigation from "@/components/navigation";
 import Projects from "@/components/projects";
 import Testimonials from "@/components/testimonials";
 import Career from "@/components/career-path";
+import Footer from "@/components/footer";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Projects />
         <Testimonials />
         <Contact />
+        <Footer />
       </main>
     </div>
   );

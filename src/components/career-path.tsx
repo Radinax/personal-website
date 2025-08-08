@@ -97,7 +97,7 @@ const Career = () => {
 
   return (
     <section id="career" className="py-20">
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-6 bg-transparent">
         <h2 className="text-4xl font-bold text-center mb-6 text-white">
           Career Journey
         </h2>
