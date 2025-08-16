@@ -44,17 +44,24 @@ const timelineEvents = [
     type: "skill",
   },
   {
-    year: "2023",
-    title: "Strategic Client Re-engagement & Technical Modernization (Finvar)",
+    year: "2025",
+    title: "Agri Culture Startup",
     description:
-      "Re-engaged as a trusted partner for Finvar. Led critical developer tooling improvements including Git multi-branch strategy and Vite migration, enabling 3.2x faster releases. Enhanced core dashboard functionality and developed a new Landing Page.",
-    type: "current",
+      "Engineered a full-stack system to streamline farmer to farmer communication. Developed a Kotlin mobile app with phone-number auth and a map-based report feature, which connected to a backend made with Node, Drizzle and Hono. Also developed an admin panel with React, Shadcn and Typescript for managing notifications to the app",
+    type: "skill",
   },
   {
     year: "2025",
-    title: "UI System & Performance Optimization (Remote Crew)",
+    title: "Revelo",
     description:
-      "Led the migration of a large-scale React application from Material UI to Shadcn UI, dramatically boosting development efficiency, component reusability, and user satisfaction.",
+      "Engaged in a project to train an LLM with algorithms and prompt correction using Next js 15, Shadcn and Typescript. This project involved building a custom LLM with a focus on algorithmic understanding and prompt correction, enhancing the model's performance in technical contexts.",
+    type: "skill",
+  },
+  {
+    year: "2023-Present",
+    title: "Strategic Client Re-engagement & Technical Modernization (Finvar)",
+    description:
+      "Re-engaged as a trusted partner for Finvar. Led critical developer tooling improvements including Git multi-branch strategy and Vite migration, enabling 3.2x faster releases. Enhanced core dashboard functionality and developed a new Landing Page.",
     type: "current",
   },
 ];
