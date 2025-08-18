@@ -81,26 +81,6 @@ const Contact = () => {
             </a>
           ))}
         </div>
-
-        {/* Optional Blog Link */}
-        <div className="bg-white rounded-2xl p-8 text-center">
-          <h3 className="text-xl font-semibold text-slate-900 mb-4">
-            Interested in My Technical Insights?
-          </h3>
-          <p className="text-slate-600 mb-6">
-            Check out my blog where I share thoughts on frontend development,
-            team leadership, and industry trends.
-          </p>
-          <a
-            href="https://adrian-beria-blog.netlify.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-          >
-            Visit My Blog
-            <ExternalLink size={18} />
-          </a>
-        </div>
       </div>
     </section>
   );

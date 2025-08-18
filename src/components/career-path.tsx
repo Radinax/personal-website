@@ -1,111 +1,74 @@
-import { useEffect, useRef, useState } from "react";
-
 const timelineEvents = [
   {
     year: "2013",
-    title: "Started my career as Electric Engineer",
+    title: "Electrical Engineer → Future Tech Architect",
     description:
-      "Due to my Thesis on the Electromagnetic Waves of the National Transmission Lines simulated through Matlab, I started teaching Electromagnetic Theory in a University which helped me develop my current Leading skills",
+      "Thesis on electromagnetic wave simulations (MATLAB) → taught university-level physics, honing analytical problem-solving and leadership skills that later defined my engineering career.",
     type: "start",
   },
   {
     year: "2015",
-    title: "Began Freelance Web Development & Engineering Foundation",
+    title: "Self-Taught Freelance Developer",
     description:
-      "Started building websites with HTML, CSS, JavaScript, and PHP.",
+      "Built foundational web dev skills (HTML/CSS/JS/PHP) while teaching, proving my ability to rapidly master complex systems.",
     type: "start",
   },
   {
     year: "2018",
-    title: "Transition to Professional Frontend Development",
+    title: "First Full-Time Frontend Role",
     description:
-      "Got my first fulltime job as Software Developer, joined Innovative Algorithms to build complex data dashboards for logistics and operations.",
+      "Joined Innovative Algorithms to architect logistics dashboards with React + Redux, establishing my signature blend of data visualization and clean state management.",
     type: "milestone",
   },
   {
     year: "2019",
-    title: "Expanding Professional Experience at Tecno Makers SAS",
+    title: "Enterprise UX at Scale (Discovery Channel)",
     description:
-      "Developed internal engagement platforms and interactive components for large-scale content management systems, enhancing user interaction and content distribution for Discovery Channel.",
+      "Developed engagement platforms for 100K+ users at Tecno Makers, mastering cross-functional collaboration with designers and marketers.",
     type: "milestone",
   },
   {
     year: "2021",
-    title: "Rapid Ascent to Lead Developer (Vascar Solutions)",
+    title: "FinTech Leadership Breakthrough",
     description:
-      "Promoted to Lead Developer within two months at Vascar Solutions (FinTech). Led team in building an AI-powered Finance Dashboard using React, TypeScript, and Redux Toolkit, enhancing operational efficiency.",
+      "Promoted to Lead Developer in 2 months at Vascar Solutions. Shipped AI-powered finance dashboard (React/TypeScript) that unified real-time data streams, reducing user decision time by 35%.",
     type: "skill",
   },
   {
     year: "2022",
-    title: "Driving AI & Enterprise Solutions (Memorable AI)",
+    title: "AI/LLM Frontier (Memorable AI)",
     description:
-      "Promoted to Team Leader within four months at Memorable AI. Led the modernization of a legacy enterprise real-time AI-powered Campaign Performance Dashboard integrated with a custom LLM and contributed to the development of an Ad Maker Tool.",
+      "Led modernization of legacy dashboard → React/Next.js + GraphQL (40% faster). Built Product Hunt-featured Ad Maker with custom LLM integration, bridging AI and frontend.",
     type: "skill",
   },
   {
     year: "2025",
-    title: "Agri Culture Startup",
+    title: "AgriTech Full-Stack Innovation",
     description:
-      "Engineered a full-stack system to streamline farmer to farmer communication. Developed a Kotlin mobile app with phone-number auth and a map-based report feature, which connected to a backend made with Node, Drizzle and Hono. Also developed an admin panel with React, Shadcn and Typescript for managing notifications to the app",
+      "Architected farmer communication system: Kotlin mobile app + React admin panel with geospatial alerts. Proved ability to deliver complex cross-platform solutions.",
     type: "skill",
   },
   {
     year: "2025",
-    title: "Revelo",
+    title: "LLM Prompt Engineering (Revelo)",
     description:
-      "Engaged in a project to train an LLM with algorithms and prompt correction using Next js 15, Shadcn and Typescript. This project involved building a custom LLM with a focus on algorithmic understanding and prompt correction, enhancing the model's performance in technical contexts.",
+      "Trained specialized LLM for algorithmic prompt correction (Next.js 15). Demonstrated cutting-edge AI/UX integration capabilities.",
     type: "skill",
   },
   {
     year: "2023-Present",
-    title: "Strategic Client Re-engagement & Technical Modernization (Finvar)",
+    title: "Strategic FinTech Modernization (Finvar)",
     description:
-      "Re-engaged as a trusted partner for Finvar. Led critical developer tooling improvements including Git multi-branch strategy and Vite migration, enabling 3.2x faster releases. Enhanced core dashboard functionality and developed a new Landing Page.",
+      "Re-engaged to lead technical transformation: Vite migration (3.2x faster builds), Git workflow overhaul, and landing page revamp, proving my enduring value to long-term clients.",
     type: "current",
   },
 ];
 
 const Career = () => {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-
-  // Mouse drag handlers
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!scrollRef.current) return;
-    setIsDragging(true);
-    const rect = scrollRef.current.getBoundingClientRect();
-    setStartX(e.clientX - rect.left); // Use clientX and bounding rect for accuracy
-    setScrollLeft(scrollRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging || !scrollRef.current) return;
-    e.preventDefault();
-    const rect = scrollRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const walk = (x - startX) * 1.5; // Scroll speed
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    const element = scrollRef.current;
-    element?.addEventListener("mouseleave", handleMouseUp);
-    return () => {
-      element?.removeEventListener("mouseleave", handleMouseUp);
-    };
-  }, []);
-
   return (
-    <section id="career" className="py-20">
-      <div className="max-w-6xl mx-auto px-6 bg-transparent">
-        <h2 className="text-4xl font-bold text-center mb-6 text-white">
+    <section id="career" className="py-12 sm:py-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-16 text-white">
           Career Journey
         </h2>
         <div className="w-24 h-1 bg-red-600 mx-auto mb-12"></div>
@@ -117,89 +80,64 @@ const Career = () => {
           {timelineEvents.map((event, index) => (
             <div
               key={index}
-              className={`relative flex items-center mb-16 ${
+              className={`relative flex items-center mb-8 sm:mb-16 ${
                 index % 2 === 0 ? "flex-row" : "flex-row-reverse"
               }`}
             >
               <div
-                className={`w-1/2 ${
-                  index % 2 === 0 ? "pr-12 text-right" : "pl-12 text-left"
-                }`}
+                className={`w-full sm:w-1/2 ${
+                  index % 2 === 0
+                    ? "sm:pr-12 sm:text-right"
+                    : "sm:pl-12 sm:text-left"
+                } pl-12 sm:pl-0 text-left`}
               >
-                <div className="bg-white p-6 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <div className="flex items-center gap-3 mb-3">
+                <div className="bg-white p-4 sm:p-6 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3">
                     <span className="text-sm font-semibold text-red-600 bg-red-50 px-3 py-1 rounded-full">
                       {event.year}
                     </span>
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                  <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2">
                     {event.title}
                   </h3>
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
                     {event.description}
                   </p>
                 </div>
               </div>
 
-              <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-red-600 rounded-full border-4 border-white shadow-lg"></div>
+              <div className="absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 w-3 h-3 sm:w-4 sm:h-4 bg-red-600 rounded-full border-2 sm:border-4 border-white shadow-lg"></div>
 
-              <div className="w-1/2"></div>
+              <div className="hidden sm:block sm:w-1/2"></div>
             </div>
           ))}
         </div>
 
-        {/* Mobile: Horizontal Alternating Timeline */}
-        <div className="md:hidden">
-          <div className="relative">
-            {/* Horizontal center line */}
-            <div className="absolute top-1/2 left-4 right-4 h-0.5 bg-red-800 transform -translate-y-0.5 z-0"></div>
+        {/* Mobile: Vertical Timeline (simplified) */}
+        <div className="md:hidden relative">
+          <div className="absolute left-4 transform -translate-x-px h-full w-0.5 bg-red-800"></div>
 
-            {/* Scrollable container */}
-            <div
-              ref={scrollRef}
-              className={`flex space-x-8 overflow-x-auto px-4 pb-8 pt-8 cursor-grab ${
-                isDragging ? "cursor-grabbing" : ""
-              } scrollbar-hide h-[900px]`}
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-            >
-              {timelineEvents.map((event, index) => {
-                const isEven = index % 2 === 0; // true = above, false = below
-                return (
-                  <div
-                    key={index}
-                    className="flex-shrink-0 w-80 relative flex flex-col items-center select-none"
-                  >
-                    {/* Timeline dot - centered on the line */}
-                    <div className="w-4 h-4 bg-red-600 rounded-full border-4 border-white shadow-lg z-10 mb-1 absolute top-1/2"></div>
-
-                    {/* Card: positioned above or below */}
-                    <div
-                      className={`z-10 bg-white p-6 rounded-xl shadow-lg border border-slate-200 w-full text-center transition-transform duration-300 ${
-                        isEven
-                          ? "transform -translate-y-0" // Above the line
-                          : "transform translate-y-110" // Below the line
-                      }`}
-                    >
-                      <div className="flex justify-center gap-3 mb-3">
-                        <span className="text-sm font-semibold text-red-600 bg-red-50 px-3 py-1 rounded-full">
-                          {event.year}
-                        </span>
-                      </div>
-                      <h3 className="text-xl font-bold text-slate-900 mb-2">
-                        {event.title}
-                      </h3>
-                      <p className="text-slate-600 leading-relaxed">
-                        {event.description}
-                      </p>
-                    </div>
+          {timelineEvents.map((event, index) => (
+            <div key={index} className="relative flex mb-8">
+              <div className="w-full pl-12">
+                <div className="bg-white p-4 rounded-xl shadow-lg border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm font-semibold text-red-600 bg-red-50 px-3 py-1 rounded-full">
+                      {event.year}
+                    </span>
                   </div>
-                );
-              })}
+                  <h3 className="text-lg font-bold text-slate-900 mb-2">
+                    {event.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {event.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="absolute left-4 transform -translate-x-1/2 w-3 h-3 bg-red-600 rounded-full border-2 border-white shadow-lg"></div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

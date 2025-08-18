@@ -6,17 +6,19 @@ import Projects from "@/components/projects";
 import Testimonials from "@/components/testimonials";
 import Career from "@/components/career-path";
 import Footer from "@/components/footer";
+import BlogArticles from "@/components/blog-articles";
 
 function App() {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
-      <main className="bg-black opacity-90 blur-[0.5px]">
+      <main className="bg-black opacity-90">
         <Hero />
         <About />
         <Career />
         <Projects />
         <Testimonials />
+        <BlogArticles />
         <Contact />
         <Footer />
       </main>

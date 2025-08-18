@@ -6,45 +6,43 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            About Me
+            From Electrical Engineer to AI-First Frontend Architect
           </h2>
           <div className="w-24 h-1 bg-red-600 mx-auto mb-8"></div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           <div className="space-y-6">
-            <p className="text-lg text-white leading-relaxed">
-              As a Senior Frontend Lead Developer,{" "}
+            <p className="text-lg text-white leading-relaxed text-center sm:text-left">
               <b className="text-red-400">
-                I specialize in building sophisticated B2B platforms and
-                internal tools using React and TypeScript
+                Senior Frontend Engineer specializing in AI-powered enterprise
+                applications
               </b>
-              . My unique journey began with an Electrical Engineering
-              background, providing me with analytical thinking and systems
-              understanding that I've applied to web development since 2015.
+              . With 8+ years of experience, I bridge the gap between complex
+              business logic and intuitive interfaces—modernizing legacy systems
+              like Memorable AI's dashboard (<b>40% faster load times</b>) and
+              shipping LLM tools to Product Hunt.
             </p>
 
-            <p className="text-lg text-white leading-relaxed">
-              From freelance web development with HTML, CSS, JavaScript, and PHP
-              (2015-2018) to professional development leadership since 2018,
-              I've consistently focused on solving complex problems for business
-              users. I excel at modernizing codebases, optimizing performance,
-              and leading cross-functional teams to deliver scalable solutions.
+            <p className="text-lg text-white leading-relaxed text-center sm:text-left">
+              My <b className="text-red-400">engineering background</b>{" "}
+              (electromagnetics + MATLAB) fuels my architectural approach. I
+              don't just build UIs—I design <b>scalable systems</b>
+              with React/TypeScript, GraphQL, and AI integration, mentored 10+
+              developers remotely, and led fintech projects serving 100K+ users.
             </p>
 
-            <p className="text-lg text-white leading-relaxed">
-              <b className="text-red-400">
-                My expertise lies in transforming complex business requirements
-                into intuitive, efficient interfaces that empower professional
-                users and drive operational excellence
-              </b>
-              . I'm passionate about integrating AI-driven features and creating
-              solutions that scale with growing organizations.
+            <p className="text-lg text-white leading-relaxed text-center sm:text-left">
+              <b className="text-red-400">Current focus</b>: Helping companies
+              augment their frontends with <b>LLM capabilities</b> while
+              maintaining performance and type safety (Zustand + Codegen).
+              Passionate about tools that turn complex data into{" "}
+              <b>actionable insights</b> for business users.
             </p>
           </div>
 
+          {/* Your existing image component remains unchanged */}
           <div className="relative flex justify-center">
-            {/* Bottom "Paper" Layer (background) */}
             <div
               className="absolute bg-zinc-800 rounded-3xl shadow-lg"
               style={{
@@ -75,11 +73,12 @@ const About = () => {
           </div>
         </div>
       </div>
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <q className="text-lg text-white leading-relaxed">
-          From my early days as a freelance web developer to leading teams in
-          building complex B2B platforms, my journey has been driven by a
-          passion for creating impactful user experiences.
+        <q className="text-xl text-white leading-relaxed italic text-center sm:text-left">
+          The best interfaces disappear—they make AI feel human and complexity
+          feel simple. That's why I obsess over both pixel-perfect React and
+          strategic LLM integration.
         </q>
       </div>
     </section>
